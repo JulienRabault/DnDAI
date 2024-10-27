@@ -1,0 +1,67 @@
+@startuml
+
+
+class GameAssistant {
+    - audio_listener : AudioListener
+    - memory : SessionMemory
+    - analyzer : DialogueAnalyzer
+    + __init__(listener: AudioListener, memory: SessionMemory, analyzer: DialogueAnalyzer)
+    + start_session()
+    + notify_if_important(dialogue: str)
+}
+
+
+class AudioListener {
+    - model : WhisperModel
+    - language : str
+    + __init__(model_size: str, language: str)
+    + transcribe_audio_file(file_path: str) : Optional[str]
+    + listen_and_transcribe() : Optional[str]
+}
+
+class SessionMemory {
+    - memory : List[str]
+    + __init__()
+    + add_entry(entry: str)
+    + get_entries() : List[str]
+}
+
+class DialogueAnalyzer {
+    + analyze(dialogue: str) : List[str]
+    + extract_entities(dialogue: str) : Dict[str, List[str]]
+}
+
+class TestAudioListener {
+    + setUp()
+    + test_transcribe_audio_file_success()
+    + test_transcribe_audio_file_not_found()
+    + test_transcribe_audio_file_no_speech()
+}
+
+class TestSessionMemory {
+    + setUp()
+    + test_add_entry()
+    + test_get_entries()
+}
+
+class TestDialogueAnalyzer {
+    + setUp()
+    + test_analyze()
+    + test_extract_entities()
+}
+
+class TestGameAssistant {
+    + setUp()
+    + test_start_session()
+    + test_notify_if_important()
+}
+
+AudioListener --> GameAssistant
+SessionMemory --> GameAssistant
+DialogueAnalyzer --> GameAssistant
+
+TestAudioListener --> AudioListener
+TestSessionMemory --> SessionMemory
+TestDialogueAnalyzer --> DialogueAnalyzer
+TestGameAssistant --> GameAssistant
+@enduml

@@ -1,0 +1,56 @@
+@startuml
+
+package "Audio Processing" {
+    class AudioListener {
+        - model: WhisperModel
+        - language: str
+        + __init__(model_size: str, language: str)
+        + transcribe_audio_file(file_path: str) -> Optional[str]
+        + listen() -> Optional[str]
+    }
+}
+
+package "Context Management" {
+    class ContextManager {
+        - campaign_text: str
+        + __init__(campaign_pdf_path: str)
+        + load_campaign_context()
+        + summarize_context(session_text: str) -> str
+    }
+}
+
+package "Session Management" {
+    class Session {
+        - session_id: int
+        - session_text: str
+        + __init__(session_id: int, session_text: str)
+        + summarize() -> str
+    }
+
+    class SessionManager {
+        - sessions: List<Session>
+        + __init__()
+        + add_session(session: Session)
+        + summarize_all_sessions() -> str
+    }
+}
+
+package "AI Assistant" {
+    class AIAssistant {
+        - audio_listener: AudioListener
+        - context_manager: ContextManager
+        - session_manager: SessionManager
+        + __init__(audio_model: str, campaign_pdf_path: str)
+        + record_session() -> None
+        + summarize_current_session() -> str
+        + summarize_all_sessions() -> str
+    }
+}
+
+AIAssistant --> AudioListener : uses
+AIAssistant --> ContextManager : uses
+AIAssistant --> SessionManager : uses
+SessionManager --> Session : manages
+ContextManager --> Session : provides context
+
+@enduml
